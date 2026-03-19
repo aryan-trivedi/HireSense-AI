@@ -1,0 +1,51 @@
+title,description,skills
+Backend Developer,Design and build scalable server-side applications and REST APIs.,Python Node.js REST APIs FastAPI Express.js PostgreSQL Docker Git
+Frontend Developer,Develop responsive user interfaces for modern web applications.,JavaScript TypeScript React HTML CSS Next.js Tailwind CSS Git
+Full Stack Developer,"Develop and maintain complete web applications including frontend, backend, and databases.",JavaScript TypeScript React Node.js Express.js MongoDB REST APIs Docker Git
+Software Engineer,"Design, develop, and maintain reliable software systems and services.",Java Python Data Structures Algorithms OOP System Design Git Debugging
+Machine Learning Engineer,Develop and deploy machine learning models and data pipelines.,Python TensorFlow PyTorch Pandas NumPy Scikit-learn Model Deployment Docker
+Data Scientist,Analyze datasets and build predictive models to support decision-making.,Python Pandas NumPy Statistics Machine Learning Data Visualization SQL Jupyter
+Data Engineer,Design and maintain scalable data pipelines and data storage systems.,Python SQL ETL Data Pipelines Apache Spark Airflow Data Warehousing AWS
+DevOps Engineer,Automate deployment pipelines and manage cloud infrastructure.,Docker Kubernetes AWS CI/CD Terraform Linux Git Monitoring
+Cloud Engineer,Design and manage scalable cloud-based infrastructure.,AWS Azure GCP Docker Kubernetes Terraform Networking Linux
+Site Reliability Engineer,"Ensure reliability, scalability, and monitoring of production systems.",Linux Kubernetes Docker Prometheus Monitoring CI/CD Automation Networking
+Mobile App Developer,Develop and maintain mobile applications for Android and iOS.,Flutter Dart Kotlin Swift REST APIs Firebase Mobile UI Git
+AI Engineer,Build AI-powered applications using machine learning and LLM models.,Python TensorFlow PyTorch NLP Transformers APIs FastAPI Docker
+Prompt Engineer,Design and optimize prompts for large language model applications.,Prompt Engineering NLP Python LLM APIs Experimentation Data Analysis Documentation
+Cybersecurity Analyst,Monitor systems and respond to security threats and vulnerabilities.,Network Security Linux Threat Analysis Incident Response SIEM Encryption Security Tools
+Database Administrator,"Manage database systems for performance, security, and reliability.",SQL PostgreSQL MySQL Database Tuning Backup Recovery Data Modeling Linux
+QA Automation Engineer,Develop automated tests and ensure software quality.,Python Selenium Test Automation CI/CD API Testing Software Testing Git
+UI UX Designer,Design intuitive user interfaces and improve product usability.,Figma User Research Wireframing Prototyping UI Design UX Design Design Systems
+Technical Writer,Create technical documentation for software products and APIs.,Technical Writing Documentation API Documentation Markdown Editing Content Strategy Version Control
+Business Analyst,Analyze business requirements and translate them into technical specifications.,Business Analysis SQL Data Analysis Requirements Gathering Stakeholder Communication Process Modeling Excel
+Product Manager,Manage product development lifecycle and coordinate cross‑functional teams.,Product Strategy Agile Scrum Roadmapping Stakeholder Management User Research Data Analysis
+Technical Product Manager,Lead development of technical products with engineering teams.,Product Strategy Agile APIs Roadmapping Technical Documentation Data Analysis Stakeholder Management
+Solutions Architect,Design scalable software architectures and cloud solutions.,System Architecture AWS Cloud Design Microservices Networking Security Documentation
+Game Developer,Develop gameplay systems and interactive gaming experiences.,C++ Unity Unreal Engine Game Physics Game Design Debugging Version Control
+Analytics Engineer,Prepare data models and datasets for analytics and reporting.,SQL Python Data Modeling ETL Data Warehousing dbt Dashboards
+Systems Engineer,Design and maintain enterprise system infrastructure.,Linux Networking System Design Automation Scripting Monitoring Security
+Network Engineer,Design and manage computer networks and connectivity.,Networking TCP IP Routing Switching Network Security Troubleshooting Linux
+Cloud Security Engineer,Secure cloud infrastructure and implement security best practices.,Cloud Security AWS IAM Encryption Network Security Monitoring Risk Assessment
+Blockchain Developer,Develop decentralized applications and smart contracts.,Solidity Ethereum Smart Contracts Web3 JavaScript Blockchain Security APIs
+Embedded Systems Engineer,Develop firmware and software for embedded hardware systems.,C C++ Embedded Systems Microcontrollers RTOS Debugging Hardware Interfaces
+Robotics Engineer,Design and program robotic systems and automation solutions.,Python ROS Robotics Control Systems Sensors Computer Vision Automation
+AR VR Developer,Develop augmented and virtual reality experiences.,Unity C# AR VR 3D Graphics Game Development UI Interaction Design
+Data Analyst,Analyze business data and generate insights through dashboards.,SQL Excel Data Analysis Data Visualization Python Dashboards Reporting
+Business Intelligence Analyst,Build dashboards and reports for business insights.,SQL Power BI Tableau Data Modeling Reporting Data Analysis Dashboards
+ETL Developer,Build and maintain data extraction and transformation pipelines.,SQL ETL Data Pipelines Data Warehousing Python Data Integration Scheduling
+Platform Engineer,Develop internal platforms and developer infrastructure tools.,Docker Kubernetes CI/CD Infrastructure Automation Cloud Platforms Monitoring
+Infrastructure Engineer,Manage enterprise infrastructure systems and deployment environments.,Linux Networking Virtualization Automation Monitoring Cloud Platforms
+API Developer,Design and build scalable APIs for application integration.,REST APIs API Design Node.js Python Authentication JSON Documentation
+Integration Engineer,Integrate different systems and services across enterprise platforms.,APIs Data Integration Middleware REST APIs JSON XML System Integration
+Software Architect,Design high-level software architecture and system structure.,System Architecture Microservices Design Patterns Scalability Cloud Platforms Documentation
+Test Engineer,Design and execute test plans for software validation.,Software Testing Test Cases Automation Testing Debugging QA Tools Reporting
+Release Engineer,Manage software release cycles and deployment processes.,CI/CD Version Control Build Systems Deployment Automation Git Monitoring
+IT Support Engineer,Provide technical support for enterprise systems and users.,Troubleshooting Windows Linux Networking Helpdesk Ticketing Systems Documentation
+IT Operations Engineer,Maintain IT systems and ensure operational stability.,Linux Monitoring Networking Automation System Administration Troubleshooting
+Technical Support Specialist,Assist users in resolving technical product issues.,Troubleshooting Customer Support Documentation Software Support Communication
+CRM Developer,Customize and develop CRM platform features.,CRM Development Salesforce APIs JavaScript Data Integration Automation
+ERP Developer,Develop and maintain enterprise resource planning systems.,ERP Systems SQL Business Logic Integration APIs Reporting
+SAP Consultant,Implement and customize SAP solutions for enterprises.,SAP ERP Business Processes SAP Modules Configuration Integration Documentation
+Digital Transformation Analyst,Support organizations adopting digital technologies.,Business Analysis Digital Strategy Data Analysis Process Improvement Stakeholder Management
+Product Analyst,Analyze product performance metrics and user behavior.,SQL Product Metrics Data Analysis Experimentation Dashboards Reporting
+UX Researcher,Conduct user research to improve product usability.,User Research Interviews Usability Testing Data Analysis UX Insights Reporting

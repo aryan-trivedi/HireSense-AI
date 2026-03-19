@@ -1,0 +1,53 @@
+# FastAPI core
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+typing-extensions
+
+# Security & Auth
+passlib[bcrypt]
+python-jose[cryptography]
+bcrypt
+authlib
+
+# File upload & parsing
+python-multipart
+pymupdf
+pdfplumber
+python-docx
+
+# AI & LLM
+google-generativeai
+langchain
+sentence-transformers
+
+# Vector DB & similarity
+faiss-cpu
+numpy
+scikit-learn
+
+# Database
+sqlalchemy
+psycopg2-binary
+alembic
+
+# Async + performance
+httpx
+
+# Background tasks
+celery
+redis
+
+# Validation & utilities
+email-validator
+requests
+
+# CORS & middleware
+starlette
+
+# Data processing
+pandas
+
+# Supabase (if used)
+supabase
