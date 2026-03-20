@@ -19,7 +19,7 @@
 
 # 🌍 Live Demo
 
-🔗 **Frontend:**  
+🔗 **Live Link**  
 https://hire-sense-ai-pied.vercel.app/
 
 ---
