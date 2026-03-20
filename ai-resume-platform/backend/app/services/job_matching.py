@@ -1,15 +1,14 @@
-from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 import pandas as pd
 import re
 
+from app.services.embedding_service import embedding_service
+
 
 class JobMatcher:
 
     def __init__(self):
-
-        self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
         self.jobs = []
         self.index = None
@@ -41,14 +40,15 @@ class JobMatcher:
 
         self.jobs = jobs
 
+        model = embedding_service.get_model()
+
         texts = [
             f"{job['title']} {job['description']} {job['skills']}"
             for job in jobs
         ]
 
-        embeddings = self.model.encode(texts, convert_to_numpy=True)
+        embeddings = model.encode(texts, convert_to_numpy=True)
 
-        # normalize embeddings for cosine similarity
         faiss.normalize_L2(embeddings)
 
         dimension = embeddings.shape[1]
@@ -74,7 +74,9 @@ class JobMatcher:
 
         top_k = min(top_k, len(self.jobs))
 
-        resume_embedding = self.model.encode(
+        model = embedding_service.get_model()
+
+        resume_embedding = model.encode(
             [resume_text], convert_to_numpy=True
         )
 
@@ -96,19 +98,15 @@ class JobMatcher:
 
             missing_skills = list(job_tokens - resume_tokens)
 
-            # semantic similarity from FAISS
             semantic_score = float(scores[0][i])
 
-            # skill match score
             if len(job_tokens) > 0:
                 skill_score = len(matched_skills) / len(job_tokens)
             else:
                 skill_score = 0
 
-            # hybrid scoring
             final_score = (0.7 * semantic_score) + (0.3 * skill_score)
 
-            # convert to percentage
             match_percentage = round(final_score * 100, 2)
 
             if missing_skills:
@@ -123,7 +121,7 @@ class JobMatcher:
                     "title": job["title"],
                     "description": job["description"],
                     "skills": job["skills"],
-                    "match_score": f"{match_percentage+25}%",
+                    "match_score": f"{match_percentage + 25}%",
                     "matched_skills": list(matched_skills)[:5],
                     "missing_skills": missing_skills[:5],
                     "recommendation": recommendation

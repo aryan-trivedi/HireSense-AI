@@ -9,7 +9,6 @@ typing-extensions
 passlib[bcrypt]
 python-jose[cryptography]
 bcrypt
-authlib
 
 # File upload & parsing
 python-multipart
@@ -17,9 +16,7 @@ pymupdf
 pdfplumber
 python-docx
 
-# AI & LLM
-google-generativeai
-langchain
+# AI embeddings
 sentence-transformers
 
 # Vector DB & similarity
@@ -32,22 +29,15 @@ sqlalchemy
 psycopg2-binary
 alembic
 
-# Async + performance
+# HTTP requests
 httpx
-
-# Background tasks
-celery
-redis
-
-# Validation & utilities
-email-validator
 requests
 
-# CORS & middleware
-starlette
+# Validation
+email-validator
 
 # Data processing
 pandas
 
-# Supabase (if used)
+# Supabase
 supabase

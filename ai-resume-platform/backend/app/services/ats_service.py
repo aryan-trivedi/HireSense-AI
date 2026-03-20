@@ -1,17 +1,14 @@
-from sentence_transformers import SentenceTransformer
+import logging
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import Dict
 
 from app.services.llm_service import extract_job_skills
+from app.services.embedding_service import embedding_service
 
-
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+logger = logging.getLogger(__name__)
 
 
 class ATSEngine:
-
-    def __init__(self):
-        self.model = embedding_model
 
     # -----------------------------
     # Build resume text for embeddings
@@ -35,10 +32,16 @@ class ATSEngine:
     # -----------------------------
     def semantic_score(self, resume_text: str, job_desc: str):
 
-        embeddings = self.model.encode([resume_text, job_desc])
+        model = embedding_service.get_model()
+
+        embeddings = model.encode(
+            [resume_text, job_desc],
+            show_progress_bar=False
+        )
 
         similarity = cosine_similarity(
-            [embeddings[0]], [embeddings[1]]
+            [embeddings[0]],
+            [embeddings[1]]
         )[0][0]
 
         return float(round(similarity * 100, 2))
@@ -154,7 +157,6 @@ class ATSEngine:
 
         job_skill_count = len(skills["job_skills"])
 
-        # Dynamic weighting based on job description
         if job_skill_count >= 5:
             semantic_weight = 0.50
             skill_weight = 0.35
@@ -170,7 +172,6 @@ class ATSEngine:
             + structure_weight * structure["structure_score"]
         )
 
-        # Calibration so good resumes land around 70–85
         calibrated_score = raw_score * 1.2
 
         final_score = float(round(min(calibrated_score, 100), 2))
