@@ -25,7 +25,9 @@ export default function ResetPasswordPage() {
 
     setLoading(true)
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://hire-sense-ai-pied.vercel.app/reset-password"
+    })
 
     setLoading(false)
 
