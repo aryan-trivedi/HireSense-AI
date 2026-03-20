@@ -1,3 +1,7 @@
+--index-url https://pypi.org/simple
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+
 # FastAPI core
 fastapi
 uvicorn[standard]
@@ -18,7 +22,7 @@ python-docx
 
 # AI embeddings
 sentence-transformers==2.7.0
-torch==2.2.2+cpu
+torch==2.2.2
 
 # Vector DB & similarity
 faiss-cpu
