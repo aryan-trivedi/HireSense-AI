@@ -6,7 +6,7 @@ import faiss
 import numpy as np
 import pandas as pd
 
-from app.services.embedding_service import get_embedding_model
+from app.services.embedding_service import encode_texts
 
 logger = logging.getLogger(__name__)
 
@@ -57,20 +57,12 @@ class JobMatcher:
         self.jobs = jobs
 
         try:
-            model = get_embedding_model()
-
             texts = [
                 f"{job['title']} {job['description']} {job['skills']}"
                 for job in jobs
             ]
 
-            embeddings = model.encode(
-                texts,
-                convert_to_numpy=True,
-                show_progress_bar=False
-            )
-
-            embeddings = embeddings.astype("float32")
+            embeddings = encode_texts(texts)
 
             faiss.normalize_L2(embeddings)
 
@@ -107,15 +99,7 @@ class JobMatcher:
             return []
 
         try:
-            model = get_embedding_model()
-
-            resume_embedding = model.encode(
-                [resume_text],
-                convert_to_numpy=True,
-                show_progress_bar=False
-            )
-
-            resume_embedding = resume_embedding.astype("float32")
+            resume_embedding = encode_texts([resume_text])
 
             faiss.normalize_L2(resume_embedding)
 
@@ -147,7 +131,6 @@ class JobMatcher:
 
                 match_percentage = round(final_score * 100, 2)
 
-                # Slight calibration boost
                 match_percentage = min(match_percentage + 20, 100)
 
                 if missing_skills:
@@ -178,5 +161,4 @@ class JobMatcher:
             return []
 
 
-# Singleton instance
 job_matcher = JobMatcher()
