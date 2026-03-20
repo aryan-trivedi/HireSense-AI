@@ -18,7 +18,7 @@ python-docx
 
 # AI embeddings
 sentence-transformers==2.7.0
-torch==2.2.2
+torch==2.2.2+cpu
 
 # Vector DB & similarity
 faiss-cpu

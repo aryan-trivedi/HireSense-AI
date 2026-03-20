@@ -1,9 +1,10 @@
 import logging
+from typing import Dict, List
+
 from sklearn.metrics.pairwise import cosine_similarity
-from typing import Dict
 
 from app.services.llm_service import extract_job_skills
-from app.services.embedding_service import embedding_service
+from app.services.embedding_service import get_embedding_model
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +15,7 @@ class ATSEngine:
     # Build resume text for embeddings
     # -----------------------------
     def build_resume_text(self, resume: Dict) -> str:
-
-        parts = []
+        parts: List[str] = []
 
         parts.extend(resume.get("skills", []))
 
@@ -30,26 +30,31 @@ class ATSEngine:
     # -----------------------------
     # Semantic similarity
     # -----------------------------
-    def semantic_score(self, resume_text: str, job_desc: str):
+    def semantic_score(self, resume_text: str, job_desc: str) -> float:
 
-        model = embedding_service.get_model()
+        try:
+            model = get_embedding_model()
 
-        embeddings = model.encode(
-            [resume_text, job_desc],
-            show_progress_bar=False
-        )
+            embeddings = model.encode(
+                [resume_text, job_desc],
+                show_progress_bar=False
+            )
 
-        similarity = cosine_similarity(
-            [embeddings[0]],
-            [embeddings[1]]
-        )[0][0]
+            similarity = cosine_similarity(
+                [embeddings[0]],
+                [embeddings[1]]
+            )[0][0]
 
-        return float(round(similarity * 100, 2))
+            return float(round(similarity * 100, 2))
+
+        except Exception as e:
+            logger.error(f"Semantic scoring failed: {e}")
+            return 0.0
 
     # -----------------------------
     # Resume skill extraction
     # -----------------------------
-    def extract_resume_skills(self, resume: Dict):
+    def extract_resume_skills(self, resume: Dict) -> List[str]:
 
         skills = resume.get("skills", [])
         extracted = []
@@ -157,6 +162,7 @@ class ATSEngine:
 
         job_skill_count = len(skills["job_skills"])
 
+        # Adaptive weighting
         if job_skill_count >= 5:
             semantic_weight = 0.50
             skill_weight = 0.35
@@ -172,6 +178,7 @@ class ATSEngine:
             + structure_weight * structure["structure_score"]
         )
 
+        # Calibration
         calibrated_score = raw_score * 1.2
 
         final_score = float(round(min(calibrated_score, 100), 2))
@@ -192,4 +199,5 @@ class ATSEngine:
         }
 
 
+# Singleton instance
 ats_engine = ATSEngine()

@@ -1,24 +1,20 @@
 import logging
-from sentence_transformers import SentenceTransformer
 
 logger = logging.getLogger(__name__)
 
+_model = None
 
-class EmbeddingService:
+def get_embedding_model():
+    global _model
 
-    _model = None
+    if _model is None:
+        logger.info("Loading embedding model...")
 
-    @classmethod
-    def get_model(cls):
+        from sentence_transformers import SentenceTransformer
 
-        if cls._model is None:
-            logger.info("Loading embedding model...")
+        _model = SentenceTransformer(
+            "sentence-transformers/all-MiniLM-L6-v2",
+            device="cpu"
+        )
 
-            cls._model = SentenceTransformer(
-                "sentence-transformers/all-MiniLM-L6-v2"
-            )
-
-        return cls._model
-
-
-embedding_service = EmbeddingService()
+    return _model

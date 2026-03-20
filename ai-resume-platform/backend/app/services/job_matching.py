@@ -1,37 +1,53 @@
+import logging
+import re
+from typing import List, Dict
+
 import faiss
 import numpy as np
 import pandas as pd
-import re
 
-from app.services.embedding_service import embedding_service
+from app.services.embedding_service import get_embedding_model
+
+logger = logging.getLogger(__name__)
 
 
 class JobMatcher:
 
     def __init__(self):
-
-        self.jobs = []
+        self.jobs: List[Dict] = []
         self.index = None
 
-    def load_jobs_from_csv(self, path):
+    # -----------------------------
+    # Load jobs from CSV
+    # -----------------------------
+    def load_jobs_from_csv(self, path: str):
 
-        df = pd.read_csv(path)
+        try:
+            df = pd.read_csv(path)
 
-        jobs = []
+            jobs = []
 
-        for _, row in df.iterrows():
+            for _, row in df.iterrows():
 
-            job = {
-                "title": str(row.get("title", "")),
-                "description": str(row.get("description", "")),
-                "skills": str(row.get("skills", ""))
-            }
+                job = {
+                    "title": str(row.get("title", "")),
+                    "description": str(row.get("description", "")),
+                    "skills": str(row.get("skills", "")),
+                }
 
-            jobs.append(job)
+                jobs.append(job)
 
-        self.build_index(jobs)
+            self.build_index(jobs)
 
-    def build_index(self, jobs):
+            logger.info(f"Loaded {len(jobs)} jobs into FAISS index")
+
+        except Exception as e:
+            logger.error(f"Failed to load jobs: {e}")
+
+    # -----------------------------
+    # Build FAISS index
+    # -----------------------------
+    def build_index(self, jobs: List[Dict]):
 
         if not jobs:
             self.jobs = []
@@ -40,24 +56,38 @@ class JobMatcher:
 
         self.jobs = jobs
 
-        model = embedding_service.get_model()
+        try:
+            model = get_embedding_model()
 
-        texts = [
-            f"{job['title']} {job['description']} {job['skills']}"
-            for job in jobs
-        ]
+            texts = [
+                f"{job['title']} {job['description']} {job['skills']}"
+                for job in jobs
+            ]
 
-        embeddings = model.encode(texts, convert_to_numpy=True)
+            embeddings = model.encode(
+                texts,
+                convert_to_numpy=True,
+                show_progress_bar=False
+            )
 
-        faiss.normalize_L2(embeddings)
+            embeddings = embeddings.astype("float32")
 
-        dimension = embeddings.shape[1]
+            faiss.normalize_L2(embeddings)
 
-        self.index = faiss.IndexFlatIP(dimension)
+            dimension = embeddings.shape[1]
 
-        self.index.add(embeddings)
+            self.index = faiss.IndexFlatIP(dimension)
 
-    def clean_tokens(self, text):
+            self.index.add(embeddings)
+
+        except Exception as e:
+            logger.error(f"Failed to build FAISS index: {e}")
+            self.index = None
+
+    # -----------------------------
+    # Clean tokens
+    # -----------------------------
+    def clean_tokens(self, text: str):
 
         text = text.lower()
 
@@ -67,68 +97,86 @@ class JobMatcher:
 
         return set(tokens)
 
-    def match(self, resume_text, top_k=5):
+    # -----------------------------
+    # Match resume to jobs
+    # -----------------------------
+    def match(self, resume_text: str, top_k: int = 5):
 
         if self.index is None:
+            logger.warning("Job index not initialized")
             return []
 
-        top_k = min(top_k, len(self.jobs))
+        try:
+            model = get_embedding_model()
 
-        model = embedding_service.get_model()
-
-        resume_embedding = model.encode(
-            [resume_text], convert_to_numpy=True
-        )
-
-        faiss.normalize_L2(resume_embedding)
-
-        scores, indices = self.index.search(resume_embedding, top_k)
-
-        resume_tokens = self.clean_tokens(resume_text)
-
-        results = []
-
-        for i, idx in enumerate(indices[0]):
-
-            job = self.jobs[idx]
-
-            job_tokens = self.clean_tokens(job["skills"])
-
-            matched_skills = job_tokens & resume_tokens
-
-            missing_skills = list(job_tokens - resume_tokens)
-
-            semantic_score = float(scores[0][i])
-
-            if len(job_tokens) > 0:
-                skill_score = len(matched_skills) / len(job_tokens)
-            else:
-                skill_score = 0
-
-            final_score = (0.7 * semantic_score) + (0.3 * skill_score)
-
-            match_percentage = round(final_score * 100, 2)
-
-            if missing_skills:
-                recommendation = (
-                    f"Improve match by learning {', '.join(missing_skills[:3])}."
-                )
-            else:
-                recommendation = "Your resume already matches most skills for this role."
-
-            results.append(
-                {
-                    "title": job["title"],
-                    "description": job["description"],
-                    "skills": job["skills"],
-                    "match_score": f"{match_percentage + 25}%",
-                    "matched_skills": list(matched_skills)[:5],
-                    "missing_skills": missing_skills[:5],
-                    "recommendation": recommendation
-                }
+            resume_embedding = model.encode(
+                [resume_text],
+                convert_to_numpy=True,
+                show_progress_bar=False
             )
 
-        return results
+            resume_embedding = resume_embedding.astype("float32")
+
+            faiss.normalize_L2(resume_embedding)
+
+            top_k = min(top_k, len(self.jobs))
+
+            scores, indices = self.index.search(resume_embedding, top_k)
+
+            resume_tokens = self.clean_tokens(resume_text)
+
+            results = []
+
+            for i, idx in enumerate(indices[0]):
+
+                job = self.jobs[idx]
+
+                job_tokens = self.clean_tokens(job["skills"])
+
+                matched_skills = job_tokens & resume_tokens
+                missing_skills = list(job_tokens - resume_tokens)
+
+                semantic_score = float(scores[0][i])
+
+                if len(job_tokens) > 0:
+                    skill_score = len(matched_skills) / len(job_tokens)
+                else:
+                    skill_score = 0
+
+                final_score = (0.7 * semantic_score) + (0.3 * skill_score)
+
+                match_percentage = round(final_score * 100, 2)
+
+                # Slight calibration boost
+                match_percentage = min(match_percentage + 20, 100)
+
+                if missing_skills:
+                    recommendation = (
+                        f"Improve match by learning {', '.join(missing_skills[:3])}."
+                    )
+                else:
+                    recommendation = (
+                        "Your resume already matches most skills for this role."
+                    )
+
+                results.append(
+                    {
+                        "title": job["title"],
+                        "description": job["description"],
+                        "skills": job["skills"],
+                        "match_score": f"{match_percentage}%",
+                        "matched_skills": list(matched_skills)[:5],
+                        "missing_skills": missing_skills[:5],
+                        "recommendation": recommendation,
+                    }
+                )
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Job matching failed: {e}")
+            return []
 
 
+# Singleton instance
 job_matcher = JobMatcher()
